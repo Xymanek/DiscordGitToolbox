@@ -5,7 +5,7 @@ namespace DiscordGitToolbox.GitHub
 {
     public interface IGitHubClientResolver
     {
-        GitHubClient GetClientForRepo(GitHubRepositoryReference repo);
+        IGitHubClient GetClientForRepo(GitHubRepositoryReference repo);
     }
 
     /// <summary>
@@ -13,30 +13,30 @@ namespace DiscordGitToolbox.GitHub
     /// </summary>
     public class GitHubClientCollection : IGitHubClientResolver
     {
-        private readonly Dictionary<GitHubRepositoryReference, GitHubClient> _perRepoClients =
-            new Dictionary<GitHubRepositoryReference, GitHubClient>();
+        private readonly Dictionary<GitHubRepositoryReference, IGitHubClient> _perRepoClients =
+            new Dictionary<GitHubRepositoryReference, IGitHubClient>();
 
-        private readonly Dictionary<string, GitHubClient> _perOwnerClients =
-            new Dictionary<string, GitHubClient>();
+        private readonly Dictionary<string, IGitHubClient> _perOwnerClients =
+            new Dictionary<string, IGitHubClient>();
 
-        private readonly GitHubClient _unauthenticatedClient;
+        private readonly IGitHubClient _unauthenticatedClient;
 
-        public GitHubClientCollection(GitHubClient unauthenticatedClient)
+        public GitHubClientCollection(IGitHubClient unauthenticatedClient)
         {
             _unauthenticatedClient = unauthenticatedClient;
         }
 
-        public void SetForRepo(GitHubRepositoryReference repositoryReference, GitHubClient client)
+        public void SetForRepo(GitHubRepositoryReference repositoryReference, IGitHubClient client)
         {
             _perRepoClients[repositoryReference] = client;
         }
 
-        public void SetForOwner(string owner, GitHubClient client)
+        public void SetForOwner(string owner, IGitHubClient client)
         {
             _perOwnerClients[owner] = client;
         }
 
-        public GitHubClient GetClientForRepo(GitHubRepositoryReference repo)
+        public IGitHubClient GetClientForRepo(GitHubRepositoryReference repo)
         {
             if (_perRepoClients.TryGetValue(repo, out var client)) return client;
             if (_perOwnerClients.TryGetValue(repo.Owner, out client)) return client;

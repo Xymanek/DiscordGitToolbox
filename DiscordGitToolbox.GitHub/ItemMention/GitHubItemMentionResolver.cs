@@ -15,23 +15,23 @@ namespace DiscordGitToolbox.GitHub.ItemMention
 
         public override async Task<IItemReference?> ResolveMentionAsync(GitHubItemMention mention)
         {
-            GitHubClient client = _clientResolver.GetClientForRepo(mention.RepositoryReference);
-            
+            IGitHubClient client = _clientResolver.GetClientForRepo(mention.RepositoryReference);
+
             Task<Issue?> issueTask = GetIssueFromMentionAsync(client, mention);
             Task<PullRequest?> prTask = GetPullRequestFromMentionAsync(client, mention);
-            
+
             await Task.WhenAll(issueTask, prTask);
 
             Issue? issue = await issueTask;
             PullRequest? pr = await prTask;
-            
+
             if (issue != null) return new GitHubIssueReference(issue);
             if (pr != null) return new GitHubPullRequestReference(pr);
 
             return null;
         }
 
-        internal static async Task<Issue?> GetIssueFromMentionAsync(GitHubClient client, GitHubItemMention mention)
+        internal static async Task<Issue?> GetIssueFromMentionAsync(IGitHubClient client, GitHubItemMention mention)
         {
             try
             {
@@ -44,8 +44,9 @@ namespace DiscordGitToolbox.GitHub.ItemMention
                 return null;
             }
         }
-        
-        internal static async Task<PullRequest?> GetPullRequestFromMentionAsync(GitHubClient client, GitHubItemMention mention)
+
+        internal static async Task<PullRequest?> GetPullRequestFromMentionAsync
+            (IGitHubClient client, GitHubItemMention mention)
         {
             try
             {
