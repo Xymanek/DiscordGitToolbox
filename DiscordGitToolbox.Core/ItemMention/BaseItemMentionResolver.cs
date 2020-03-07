@@ -10,7 +10,7 @@ namespace DiscordGitToolbox.Core.ItemMention
             return mention is TMention;
         }
 
-        public async Task<IItemReference> ResolveMentionAsync(IItemMention mention)
+        public async Task<IItemReference?> ResolveMentionAsync(IItemMention mention)
         {
             if (!IsMentionSupported(mention))
             {

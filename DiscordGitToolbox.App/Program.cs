@@ -3,42 +3,43 @@ using System.Threading.Tasks;
 using DiscordGitToolbox.Core.ItemMention;
 using DiscordGitToolbox.GitHub;
 using DiscordGitToolbox.GitHub.ItemMention;
+using Microsoft.Extensions.DependencyInjection;
 using Octokit;
 
 namespace DiscordGitToolbox.App
 {
-    internal class Program
+    internal static class Program
     {
         private static async Task Main()
         {
             Console.WriteLine("Hello World!");
-            
-            var github = new GitHubClient(new ProductHeaderValue("DiscordGitToolboxApp"));
 
-            /*PullRequest pr = await github.PullRequest.Get("WOTCStrategyOverhaul", "CovertInfiltration", 458);
-            Console.WriteLine("PR: " + pr.Title + " " + pr.HtmlUrl);
+            IServiceCollection serviceCollection = new ServiceCollection();
+            ConfigureServices(serviceCollection);
+            ServiceProvider container = serviceCollection.BuildServiceProvider();
 
-            try
-            {
-                pr = await github.PullRequest.Get("WOTCStrategyOverhaul", "CovertInfiltration", 456);
-                Console.WriteLine("PR: " + pr.Title + " " + pr.HtmlUrl);
-            }
-            catch (NotFoundException)
-            {
-                Console.WriteLine("PR #456 not found");
-                // throw;
-            }*/
-            GitHubClientCollection clientCollection = new GitHubClientCollection(github);
-            IItemMentionResolver resolver = new GitHubItemMentionResolver(clientCollection);
-            
+            IMentionPipeline pipeline = container.GetRequiredService<IMentionPipeline>();
+
             var repo = new GitHubRepositoryReference("WOTCStrategyOverhaul", "CovertInfiltration");
-            var s458 = await resolver.ResolveMentionAsync(new GitHubItemMention(repo, 458));
-            var s456 = await resolver.ResolveMentionAsync(new GitHubItemMention(repo, 456));
-            var s900 = await resolver.ResolveMentionAsync(new GitHubItemMention(repo, 900));
-            
-            Console.WriteLine(s456?.FriendlyUrl);
-            Console.WriteLine(s458?.FriendlyUrl);
-            Console.WriteLine(s900?.FriendlyUrl);
+            Console.WriteLine(await pipeline.ConvertToMessage(new GitHubItemMention(repo, 456)));
+            Console.WriteLine(await pipeline.ConvertToMessage(new GitHubItemMention(repo, 458)));
+            Console.WriteLine(await pipeline.ConvertToMessage(new GitHubItemMention(repo, 900)));
+        }
+
+        private static void ConfigureServices(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddSingleton(
+                provider => new GitHubClientCollection(
+                    new GitHubClient(new ProductHeaderValue("DiscordGitToolboxApp"))
+                )
+            );
+            serviceCollection.AddSingleton<IGitHubClientResolver>(
+                provider => provider.GetRequiredService<GitHubClientCollection>()
+            );
+
+            serviceCollection.AddSingleton<IItemMentionResolver, GitHubItemMentionResolver>();
+
+            serviceCollection.AddSingleton<IMentionPipeline, MentionPipeline>();
         }
     }
 }

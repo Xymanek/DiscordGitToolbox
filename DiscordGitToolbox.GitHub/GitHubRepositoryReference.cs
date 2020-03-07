@@ -42,9 +42,9 @@ namespace DiscordGitToolbox.GitHub
             return Equals((GitHubRepositoryReference) obj);
         }
 
-        public bool Equals(GitHubRepositoryReference other)
+        public bool Equals(GitHubRepositoryReference? other)
         {
-            if (other == null) return false;
+            if (ReferenceEquals(other, null)) return false;
             
             return Owner == other.Owner && Name == other.Name;
         }

@@ -7,7 +7,7 @@ namespace DiscordGitToolbox.Core.ItemMention
         bool IsMentionSupported(IItemMention mention);
         
         /// <exception cref="UnsupportedMentionException">If IsMentionSupported returned false</exception>
-        Task<IItemReference> ResolveMentionAsync(IItemMention mention);
+        Task<IItemReference?> ResolveMentionAsync(IItemMention mention);
     }
 
     public interface IItemMentionResolver<in TMention> : IItemMentionResolver
