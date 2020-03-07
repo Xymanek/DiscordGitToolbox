@@ -28,10 +28,10 @@ namespace DiscordGitToolbox.App
                 Console.WriteLine("PR #456 not found");
                 // throw;
             }*/
+            GitHubClientCollection clientCollection = new GitHubClientCollection(github);
+            IItemMentionResolver resolver = new GitHubItemMentionResolver(clientCollection);
             
-            IItemMentionResolver resolver = new GitHubItemMentionResolver(github);
             var repo = new GitHubRepositoryReference("WOTCStrategyOverhaul", "CovertInfiltration");
-
             var s458 = await resolver.ResolveMentionAsync(new GitHubItemMention(repo, 458));
             var s456 = await resolver.ResolveMentionAsync(new GitHubItemMention(repo, 456));
             var s900 = await resolver.ResolveMentionAsync(new GitHubItemMention(repo, 900));

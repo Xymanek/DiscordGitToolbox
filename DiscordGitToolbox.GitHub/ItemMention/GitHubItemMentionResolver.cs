@@ -6,18 +6,19 @@ namespace DiscordGitToolbox.GitHub.ItemMention
 {
     public class GitHubItemMentionResolver : BaseItemMentionResolver<GitHubItemMention>
     {
-        private readonly IGitHubClient _gitHubClient;
+        private readonly IGitHubClientResolver _clientResolver;
 
-        public GitHubItemMentionResolver(IGitHubClient gitHubClient)
+        public GitHubItemMentionResolver(IGitHubClientResolver clientResolver)
         {
-            _gitHubClient = gitHubClient;
-            // _gitHubClient = new GitHubClient(new ProductHeaderValue("DiscordGitToolboxApp"));;
+            _clientResolver = clientResolver;
         }
 
         public override async Task<IItemReference?> ResolveMentionAsync(GitHubItemMention mention)
         {
-            Task<Issue?> issueTask = GetIssueFromMentionAsync(mention);
-            Task<PullRequest?> prTask = GetPullRequestFromMentionAsync(mention);
+            GitHubClient client = _clientResolver.GetClientForRepo(mention.RepositoryReference);
+            
+            Task<Issue?> issueTask = GetIssueFromMentionAsync(client, mention);
+            Task<PullRequest?> prTask = GetPullRequestFromMentionAsync(client, mention);
             
             await Task.WhenAll(issueTask, prTask);
 
@@ -30,11 +31,11 @@ namespace DiscordGitToolbox.GitHub.ItemMention
             return null;
         }
 
-        internal async Task<Issue?> GetIssueFromMentionAsync(GitHubItemMention mention)
+        internal static async Task<Issue?> GetIssueFromMentionAsync(GitHubClient client, GitHubItemMention mention)
         {
             try
             {
-                return await _gitHubClient.Issue.Get(
+                return await client.Issue.Get(
                     mention.RepositoryReference.Owner, mention.RepositoryReference.Name, mention.Number
                 );
             }
@@ -44,11 +45,11 @@ namespace DiscordGitToolbox.GitHub.ItemMention
             }
         }
         
-        internal async Task<PullRequest?> GetPullRequestFromMentionAsync(GitHubItemMention mention)
+        internal static async Task<PullRequest?> GetPullRequestFromMentionAsync(GitHubClient client, GitHubItemMention mention)
         {
             try
             {
-                return await _gitHubClient.PullRequest.Get(
+                return await client.PullRequest.Get(
                     mention.RepositoryReference.Owner, mention.RepositoryReference.Name, mention.Number
                 );
             }
