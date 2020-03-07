@@ -20,18 +20,18 @@ namespace DiscordGitToolbox.App
             ServiceProvider container = serviceCollection.BuildServiceProvider();
 
             IMentionPipeline pipeline = container.GetRequiredService<IMentionPipeline>();
-
-            var repo = new GitHubRepositoryReference("WOTCStrategyOverhaul", "CovertInfiltration");
-            Console.WriteLine(await pipeline.ConvertToMessage(new GitHubMention(repo, 456)));
-            Console.WriteLine(await pipeline.ConvertToMessage(new GitHubMention(repo, 458)));
-            Console.WriteLine(await pipeline.ConvertToMessage(new GitHubMention(repo, 900)));
+            
+            foreach (string s in await pipeline.GetLinksForMessage("ci#123 chl#456"))
+            {
+                Console.WriteLine(s);                
+            }
         }
 
         private static void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection.AddSingleton<IMentionPipeline, MentionPipeline>();
             
-            // Github config
+            // Github client config
             serviceCollection.AddSingleton(
                 provider => new GitHubClientCollection(
                     new GitHubClient(new ProductHeaderValue("DiscordGitToolboxApp"))
@@ -40,6 +40,28 @@ namespace DiscordGitToolbox.App
             serviceCollection.AddSingleton<IGitHubClientResolver>(
                 provider => provider.GetRequiredService<GitHubClientCollection>()
             );
+            
+            // Github mentions config
+            serviceCollection.AddSingleton(provider => new GitHubMentionConfiguration
+            {
+                Repositories = new []
+                {
+                    new GitHubMentionConfiguration.Repository
+                    {
+                        Owner = "WOTCStrategyOverhaul",
+                        Name = "CovertInfiltration",
+
+                        Aliases = new[] {"", "ci", "CI"}
+                    },
+                    new GitHubMentionConfiguration.Repository
+                    {
+                        Owner = "X2CommunityCore",
+                        Name = "X2WOTCCommunityHighlander",
+
+                        Aliases = new[] {"chl", "CHL"}
+                    }
+                }
+            });
 
             // Mention resolvers
             serviceCollection.AddSingleton<IMentionResolver, GitHubMentionResolver>();

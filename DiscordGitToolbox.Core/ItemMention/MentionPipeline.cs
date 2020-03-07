@@ -6,7 +6,7 @@ namespace DiscordGitToolbox.Core.ItemMention
 {
     public interface IMentionPipeline
     {
-        Task<string?> ConvertToMessage(IMention mention);
+        Task<IEnumerable<string>> GetLinksForMessage(string message);
     }
     
     public class MentionPipeline : IMentionPipeline
@@ -20,7 +20,14 @@ namespace DiscordGitToolbox.Core.ItemMention
             _resolvers = resolvers;
         }
 
-        public async Task<string?> ConvertToMessage(IMention mention)
+        public async Task<IEnumerable<string>> GetLinksForMessage(string message)
+        {
+            string?[] links = await Task.WhenAll(ExtractMentions(message).Select(ConvertToLinks));
+
+            return links.Where(link => link != null);
+        }
+
+        private async Task<string?> ConvertToLinks(IMention mention)
         {
             IReference? itemReference = null;
             
@@ -35,7 +42,7 @@ namespace DiscordGitToolbox.Core.ItemMention
             return itemReference?.FriendlyUrl;
         }
 
-        public IEnumerable<IMention> ExtractMentions(string message)
+        private IEnumerable<IMention> ExtractMentions(string message)
         {
             return _extractors.SelectMany(extractor => extractor.ExtractMentions(message));
         }
