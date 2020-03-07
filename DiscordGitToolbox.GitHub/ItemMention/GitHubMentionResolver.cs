@@ -4,16 +4,16 @@ using Octokit;
 
 namespace DiscordGitToolbox.GitHub.ItemMention
 {
-    public class GitHubItemMentionResolver : BaseItemMentionResolver<GitHubItemMention>
+    public class GitHubMentionResolver : BaseMentionResolver<GitHubMention>
     {
         private readonly IGitHubClientResolver _clientResolver;
 
-        public GitHubItemMentionResolver(IGitHubClientResolver clientResolver)
+        public GitHubMentionResolver(IGitHubClientResolver clientResolver)
         {
             _clientResolver = clientResolver;
         }
 
-        public override async Task<IItemReference?> ResolveMentionAsync(GitHubItemMention mention)
+        public override async Task<IReference?> ResolveMentionAsync(GitHubMention mention)
         {
             IGitHubClient client = _clientResolver.GetClientForRepo(mention.RepositoryReference);
 
@@ -31,7 +31,7 @@ namespace DiscordGitToolbox.GitHub.ItemMention
             return null;
         }
 
-        internal static async Task<Issue?> GetIssueFromMentionAsync(IGitHubClient client, GitHubItemMention mention)
+        internal static async Task<Issue?> GetIssueFromMentionAsync(IGitHubClient client, GitHubMention mention)
         {
             try
             {
@@ -46,7 +46,7 @@ namespace DiscordGitToolbox.GitHub.ItemMention
         }
 
         internal static async Task<PullRequest?> GetPullRequestFromMentionAsync
-            (IGitHubClient client, GitHubItemMention mention)
+            (IGitHubClient client, GitHubMention mention)
         {
             try
             {

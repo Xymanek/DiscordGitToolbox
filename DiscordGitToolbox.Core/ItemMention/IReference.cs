@@ -1,6 +1,6 @@
 namespace DiscordGitToolbox.Core.ItemMention
 {
-    public interface IItemReference
+    public interface IReference
     {
         string FriendlyUrl { get; }
     }

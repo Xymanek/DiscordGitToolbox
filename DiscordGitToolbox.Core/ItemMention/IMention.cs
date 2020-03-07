@@ -1,6 +1,6 @@
 namespace DiscordGitToolbox.Core.ItemMention
 {
-    public interface IItemMention
+    public interface IMention
     {
     }
 }

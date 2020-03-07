@@ -5,23 +5,23 @@ namespace DiscordGitToolbox.Core.ItemMention
 {
     public interface IMentionPipeline
     {
-        Task<string?> ConvertToMessage(IItemMention mention);
+        Task<string?> ConvertToMessage(IMention mention);
     }
     
     public class MentionPipeline : IMentionPipeline
     {
-        private readonly IEnumerable<IItemMentionResolver> _resolvers;
+        private readonly IEnumerable<IMentionResolver> _resolvers;
 
-        public MentionPipeline(IEnumerable<IItemMentionResolver> resolvers)
+        public MentionPipeline(IEnumerable<IMentionResolver> resolvers)
         {
             _resolvers = resolvers;
         }
 
-        public async Task<string?> ConvertToMessage(IItemMention mention)
+        public async Task<string?> ConvertToMessage(IMention mention)
         {
-            IItemReference? itemReference = null;
+            IReference? itemReference = null;
             
-            foreach (IItemMentionResolver resolver in _resolvers)
+            foreach (IMentionResolver resolver in _resolvers)
             {
                 if (!resolver.IsMentionSupported(mention)) continue;
                 

@@ -3,7 +3,7 @@ using Octokit;
 
 namespace DiscordGitToolbox.GitHub.ItemMention
 {
-    public class GitHubIssueReference : IItemReference
+    public class GitHubIssueReference : IReference
     {
         public Issue Issue { get; }
 
@@ -15,7 +15,7 @@ namespace DiscordGitToolbox.GitHub.ItemMention
         public string FriendlyUrl => Issue.HtmlUrl;
     }
 
-    public class GitHubPullRequestReference : IItemReference
+    public class GitHubPullRequestReference : IReference
     {
         public PullRequest PullRequest { get; }
 

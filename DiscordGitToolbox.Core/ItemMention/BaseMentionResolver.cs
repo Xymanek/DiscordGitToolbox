@@ -2,15 +2,15 @@ using System.Threading.Tasks;
 
 namespace DiscordGitToolbox.Core.ItemMention
 {
-    public abstract class BaseItemMentionResolver<TMention> : IItemMentionResolver<TMention>
-        where TMention : IItemMention
+    public abstract class BaseMentionResolver<TMention> : IMentionResolver<TMention>
+        where TMention : IMention
     {
-        public bool IsMentionSupported(IItemMention mention)
+        public bool IsMentionSupported(IMention mention)
         {
             return mention is TMention;
         }
 
-        public async Task<IItemReference?> ResolveMentionAsync(IItemMention mention)
+        public async Task<IReference?> ResolveMentionAsync(IMention mention)
         {
             if (!IsMentionSupported(mention))
             {
@@ -20,6 +20,6 @@ namespace DiscordGitToolbox.Core.ItemMention
             return await ResolveMentionAsync((TMention) mention);
         }
 
-        public abstract Task<IItemReference?> ResolveMentionAsync(TMention mention);
+        public abstract Task<IReference?> ResolveMentionAsync(TMention mention);
     }
 }

@@ -4,9 +4,9 @@ using Moq;
 using Octokit;
 using Xunit;
 
-namespace DiscordGitToolbox.GitHub.Tests
+namespace DiscordGitToolbox.GitHub.Tests.ItemMention
 {
-    public class GitHubItemMentionResolverTest
+    public class GitHubMentionResolverTest
     {
         [Theory]
         [InlineData(false, false)]
@@ -15,7 +15,7 @@ namespace DiscordGitToolbox.GitHub.Tests
         public async Task TestResolveMentionAsync(bool isIssue, bool isPr)
         {
             var repo = new GitHubRepositoryReference("AwesomeOrg", "AwesomeRepo");
-            var mention = new GitHubItemMention(repo, 123);
+            var mention = new GitHubMention(repo, 123);
 
             var issue = new Issue();
             var pr = new PullRequest();
@@ -49,7 +49,7 @@ namespace DiscordGitToolbox.GitHub.Tests
                 .Setup(c => c.GetClientForRepo(It.Is<GitHubRepositoryReference>(r => r == repo)))
                 .Returns(mockClient.Object);
                 
-            var result = await new GitHubItemMentionResolver(mockClientResolver.Object)
+            var result = await new GitHubMentionResolver(mockClientResolver.Object)
                 .ResolveMentionAsync(mention);
 
             if (isIssue) Assert.IsType<GitHubIssueReference>(result);
@@ -61,7 +61,7 @@ namespace DiscordGitToolbox.GitHub.Tests
         public async Task TestGetIssueFromMentionAsync_Correct()
         {
             var repo = new GitHubRepositoryReference("AwesomeOrg", "AwesomeRepo");
-            var mention = new GitHubItemMention(repo, 123);
+            var mention = new GitHubMention(repo, 123);
             var issue = new Issue();
 
             var mockIssues = new Mock<IIssuesClient>();
@@ -76,7 +76,7 @@ namespace DiscordGitToolbox.GitHub.Tests
             var mockClient = new Mock<IGitHubClient>();
             mockClient.Setup(c => c.Issue).Returns(mockIssues.Object);
 
-            var result = await GitHubItemMentionResolver.GetIssueFromMentionAsync(mockClient.Object, mention);
+            var result = await GitHubMentionResolver.GetIssueFromMentionAsync(mockClient.Object, mention);
 
             Assert.Same(issue, result);
         }
@@ -85,7 +85,7 @@ namespace DiscordGitToolbox.GitHub.Tests
         public async Task TestGetIssueFromMentionAsync_InCorrect()
         {
             var repo = new GitHubRepositoryReference("AwesomeOrg", "AwesomeRepo");
-            var mention = new GitHubItemMention(repo, 123);
+            var mention = new GitHubMention(repo, 123);
 
             var mockIssues = new Mock<IIssuesClient>();
             mockIssues
@@ -99,7 +99,7 @@ namespace DiscordGitToolbox.GitHub.Tests
             var mockClient = new Mock<IGitHubClient>();
             mockClient.Setup(c => c.Issue).Returns(mockIssues.Object);
 
-            var result = await GitHubItemMentionResolver.GetIssueFromMentionAsync(mockClient.Object, mention);
+            var result = await GitHubMentionResolver.GetIssueFromMentionAsync(mockClient.Object, mention);
 
             Assert.Null(result);
         }
@@ -108,7 +108,7 @@ namespace DiscordGitToolbox.GitHub.Tests
         public async Task TestGetPullRequestFromMentionAsync_Correct()
         {
             var repo = new GitHubRepositoryReference("AwesomeOrg", "AwesomeRepo");
-            var mention = new GitHubItemMention(repo, 123);
+            var mention = new GitHubMention(repo, 123);
             var pr = new PullRequest();
 
             var mockPrs = new Mock<IPullRequestsClient>();
@@ -123,7 +123,7 @@ namespace DiscordGitToolbox.GitHub.Tests
             var mockClient = new Mock<IGitHubClient>();
             mockClient.Setup(c => c.PullRequest).Returns(mockPrs.Object);
 
-            var result = await GitHubItemMentionResolver.GetPullRequestFromMentionAsync(mockClient.Object, mention);
+            var result = await GitHubMentionResolver.GetPullRequestFromMentionAsync(mockClient.Object, mention);
 
             Assert.Same(pr, result);
         }
@@ -132,7 +132,7 @@ namespace DiscordGitToolbox.GitHub.Tests
         public async Task TestGetPullRequestFromMentionAsync_InCorrect()
         {
             var repo = new GitHubRepositoryReference("AwesomeOrg", "AwesomeRepo");
-            var mention = new GitHubItemMention(repo, 123);
+            var mention = new GitHubMention(repo, 123);
 
             var mockPrs = new Mock<IPullRequestsClient>();
             mockPrs
@@ -146,7 +146,7 @@ namespace DiscordGitToolbox.GitHub.Tests
             var mockClient = new Mock<IGitHubClient>();
             mockClient.Setup(c => c.PullRequest).Returns(mockPrs.Object);
 
-            var result = await GitHubItemMentionResolver.GetPullRequestFromMentionAsync(mockClient.Object, mention);
+            var result = await GitHubMentionResolver.GetPullRequestFromMentionAsync(mockClient.Object, mention);
 
             Assert.Null(result);
         }

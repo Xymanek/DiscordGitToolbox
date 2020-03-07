@@ -21,9 +21,9 @@ namespace DiscordGitToolbox.App
             IMentionPipeline pipeline = container.GetRequiredService<IMentionPipeline>();
 
             var repo = new GitHubRepositoryReference("WOTCStrategyOverhaul", "CovertInfiltration");
-            Console.WriteLine(await pipeline.ConvertToMessage(new GitHubItemMention(repo, 456)));
-            Console.WriteLine(await pipeline.ConvertToMessage(new GitHubItemMention(repo, 458)));
-            Console.WriteLine(await pipeline.ConvertToMessage(new GitHubItemMention(repo, 900)));
+            Console.WriteLine(await pipeline.ConvertToMessage(new GitHubMention(repo, 456)));
+            Console.WriteLine(await pipeline.ConvertToMessage(new GitHubMention(repo, 458)));
+            Console.WriteLine(await pipeline.ConvertToMessage(new GitHubMention(repo, 900)));
         }
 
         private static void ConfigureServices(IServiceCollection serviceCollection)
@@ -37,7 +37,7 @@ namespace DiscordGitToolbox.App
                 provider => provider.GetRequiredService<GitHubClientCollection>()
             );
 
-            serviceCollection.AddSingleton<IItemMentionResolver, GitHubItemMentionResolver>();
+            serviceCollection.AddSingleton<IMentionResolver, GitHubMentionResolver>();
 
             serviceCollection.AddSingleton<IMentionPipeline, MentionPipeline>();
         }
