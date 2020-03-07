@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AutoMapper;
+using Discord;
+using Discord.WebSocket;
 using DiscordGitToolbox.Core.ItemMention;
 using DiscordGitToolbox.GitHub;
 using DiscordGitToolbox.GitHub.ItemMention;
@@ -15,6 +17,8 @@ namespace DiscordGitToolbox.App
         {
             Console.WriteLine("Hello World!");
 
+            await Discord();
+
             IServiceCollection serviceCollection = new ServiceCollection();
             ConfigureServices(serviceCollection);
             ServiceProvider container = serviceCollection.BuildServiceProvider();
@@ -24,6 +28,30 @@ namespace DiscordGitToolbox.App
             foreach (string s in await pipeline.GetLinksForMessage("ci#123 chl#456"))
             {
                 Console.WriteLine(s);                
+            }
+        }
+        
+        private static DiscordSocketClient _client;
+
+        private static async Task Discord()
+        {
+            _client = new DiscordSocketClient();
+            
+            _client.Log += Log;
+            _client.MessageReceived += MessageReceived;
+            
+            await _client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("DiscordToken"));
+            await _client.StartAsync();
+
+            // Block this task until the program is closed.
+            await Task.Delay(-1);
+        }
+        
+        private static async Task MessageReceived(SocketMessage message)
+        {
+            if (message.Content == "!ping")
+            {
+                await message.Channel.SendMessageAsync("Pong!");
             }
         }
 
@@ -71,6 +99,12 @@ namespace DiscordGitToolbox.App
             
             // Automapper
             serviceCollection.AddAutoMapper(typeof(GitHubMapperProfile));
+        }
+        
+        private static Task Log(LogMessage msg)
+        {
+            Console.WriteLine(msg.ToString());
+            return Task.CompletedTask;
         }
     }
 }
