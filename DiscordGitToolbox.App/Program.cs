@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AutoMapper;
 using DiscordGitToolbox.Core.ItemMention;
 using DiscordGitToolbox.GitHub;
 using DiscordGitToolbox.GitHub.ItemMention;
@@ -28,6 +29,9 @@ namespace DiscordGitToolbox.App
 
         private static void ConfigureServices(IServiceCollection serviceCollection)
         {
+            serviceCollection.AddSingleton<IMentionPipeline, MentionPipeline>();
+            
+            // Github config
             serviceCollection.AddSingleton(
                 provider => new GitHubClientCollection(
                     new GitHubClient(new ProductHeaderValue("DiscordGitToolboxApp"))
@@ -37,9 +41,14 @@ namespace DiscordGitToolbox.App
                 provider => provider.GetRequiredService<GitHubClientCollection>()
             );
 
+            // Mention resolvers
             serviceCollection.AddSingleton<IMentionResolver, GitHubMentionResolver>();
-
-            serviceCollection.AddSingleton<IMentionPipeline, MentionPipeline>();
+            
+            // Mention extractors
+            serviceCollection.AddSingleton<IMentionExtractor, GitHubMentionExtractor>();
+            
+            // Automapper
+            serviceCollection.AddAutoMapper(typeof(GitHubMapperProfile));
         }
     }
 }

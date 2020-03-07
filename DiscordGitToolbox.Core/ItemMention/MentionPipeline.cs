@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DiscordGitToolbox.Core.ItemMention
@@ -10,10 +11,12 @@ namespace DiscordGitToolbox.Core.ItemMention
     
     public class MentionPipeline : IMentionPipeline
     {
+        private readonly IEnumerable<IMentionExtractor> _extractors;
         private readonly IEnumerable<IMentionResolver> _resolvers;
 
-        public MentionPipeline(IEnumerable<IMentionResolver> resolvers)
+        public MentionPipeline(IEnumerable<IMentionExtractor> extractors, IEnumerable<IMentionResolver> resolvers)
         {
+            _extractors = extractors;
             _resolvers = resolvers;
         }
 
@@ -30,6 +33,11 @@ namespace DiscordGitToolbox.Core.ItemMention
             }
 
             return itemReference?.FriendlyUrl;
+        }
+
+        public IEnumerable<IMention> ExtractMentions(string message)
+        {
+            return _extractors.SelectMany(extractor => extractor.ExtractMentions(message));
         }
     }
 }
