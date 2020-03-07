@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace DiscordGitToolbox.Core
+namespace DiscordGitToolbox.Core.ItemMention
 {
     public abstract class BaseItemMentionResolver<TMention> : IItemMentionResolver<TMention>
         where TMention : IItemMention

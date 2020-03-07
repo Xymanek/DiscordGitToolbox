@@ -1,6 +1,6 @@
 using System;
 
-namespace DiscordGitToolbox.Core
+namespace DiscordGitToolbox.Core.ItemMention
 {
     public class UnsupportedMentionException : Exception
     {

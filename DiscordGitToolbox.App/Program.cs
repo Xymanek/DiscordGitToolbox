@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using DiscordGitToolbox.Core;
+using DiscordGitToolbox.Core.ItemMention;
 using DiscordGitToolbox.GitHub;
+using DiscordGitToolbox.GitHub.ItemMention;
 using Octokit;
 
 namespace DiscordGitToolbox.App

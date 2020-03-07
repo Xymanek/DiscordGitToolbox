@@ -1,7 +1,7 @@
-using DiscordGitToolbox.Core;
+using DiscordGitToolbox.Core.ItemMention;
 using Octokit;
 
-namespace DiscordGitToolbox.GitHub
+namespace DiscordGitToolbox.GitHub.ItemMention
 {
     public class GitHubIssueReference : IItemReference
     {

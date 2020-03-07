@@ -1,6 +1,6 @@
-using DiscordGitToolbox.Core;
+using DiscordGitToolbox.Core.ItemMention;
 
-namespace DiscordGitToolbox.GitHub
+namespace DiscordGitToolbox.GitHub.ItemMention
 {
     public class GitHubItemMention : IItemMention
     {

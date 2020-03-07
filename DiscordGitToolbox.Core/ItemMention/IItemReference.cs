@@ -1,4 +1,4 @@
-namespace DiscordGitToolbox.Core
+namespace DiscordGitToolbox.Core.ItemMention
 {
     public interface IItemReference
     {

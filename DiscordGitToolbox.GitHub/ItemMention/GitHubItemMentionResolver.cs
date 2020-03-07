@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
-using DiscordGitToolbox.Core;
+using DiscordGitToolbox.Core.ItemMention;
 using Octokit;
 
-namespace DiscordGitToolbox.GitHub
+namespace DiscordGitToolbox.GitHub.ItemMention
 {
     public class GitHubItemMentionResolver : BaseItemMentionResolver<GitHubItemMention>
     {
