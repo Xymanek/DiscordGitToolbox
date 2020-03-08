@@ -2,7 +2,7 @@ using System;
 using Discord;
 using Microsoft.Extensions.Logging;
 
-namespace DiscordGitToolbox.App
+namespace DiscordGitToolbox.Discord
 {
     public static class DiscordExtensions
     {

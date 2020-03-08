@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordGitToolbox.GitHub.Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordGitToolbox.App", "DiscordGitToolbox.App\DiscordGitToolbox.App.csproj", "{347C8431-FCF4-4397-A36A-2E7B7215EE0E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordGitToolbox.Discord", "DiscordGitToolbox.Discord\DiscordGitToolbox.Discord.csproj", "{F97EE584-E591-4E18-9665-42238384A46E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{347C8431-FCF4-4397-A36A-2E7B7215EE0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{347C8431-FCF4-4397-A36A-2E7B7215EE0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{347C8431-FCF4-4397-A36A-2E7B7215EE0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F97EE584-E591-4E18-9665-42238384A46E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F97EE584-E591-4E18-9665-42238384A46E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F97EE584-E591-4E18-9665-42238384A46E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F97EE584-E591-4E18-9665-42238384A46E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

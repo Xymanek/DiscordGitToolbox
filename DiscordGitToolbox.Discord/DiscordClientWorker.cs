@@ -7,7 +7,7 @@ using DiscordGitToolbox.Core.ItemMention;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace DiscordGitToolbox.App
+namespace DiscordGitToolbox.Discord
 {
     public class DiscordClientWorker : BackgroundService
     {

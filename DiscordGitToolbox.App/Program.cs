@@ -1,6 +1,7 @@
 using AutoMapper;
 using Discord.WebSocket;
 using DiscordGitToolbox.Core.ItemMention;
+using DiscordGitToolbox.Discord;
 using DiscordGitToolbox.GitHub;
 using DiscordGitToolbox.GitHub.ItemMention;
 using Microsoft.Extensions.Configuration;
