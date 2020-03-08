@@ -1,67 +1,49 @@
-﻿using System;
-using System.Threading.Tasks;
 using AutoMapper;
 using Discord.WebSocket;
 using DiscordGitToolbox.Core.ItemMention;
 using DiscordGitToolbox.GitHub;
 using DiscordGitToolbox.GitHub.ItemMention;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Octokit;
 
 namespace DiscordGitToolbox.App
 {
-    internal static class Program
+    public static class Program
     {
-        private static void Main()
+        public static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
-
-            // await Discord();
-
-            IServiceCollection serviceCollection = new ServiceCollection();
-            ConfigureServices(serviceCollection);
-            ServiceProvider container = serviceCollection.BuildServiceProvider();
-
-            var discordHandler = container.GetRequiredService<DiscordEventsHandler>();
-
-            discordHandler.RegisterHandlers();
-
-            Task worker = Task.Factory.StartNew(() => discordHandler.ConnectAndWork(), TaskCreationOptions.LongRunning);
-            // worker.Wait();
-
-            Console.ReadLine();
-
-            /*IMentionPipeline pipeline = container.GetRequiredService<IMentionPipeline>();
-            
-            foreach (string s in await pipeline.GetLinksForMessage("ci#123 chl#456"))
-            {
-                Console.WriteLine(s);                
-            }*/
+            CreateHostBuilder(args).Build().Run();
         }
 
-        private static void ConfigureServices(IServiceCollection serviceCollection)
+        private static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureServices((hostContext, services) => { ConfigureServices(services); });
+        
+        private static void ConfigureServices(IServiceCollection services)
         {
             // Discord client
-            serviceCollection.AddSingleton<DiscordSocketClient>();
-            serviceCollection.AddSingleton<BaseSocketClient>(
+            services.AddSingleton<DiscordSocketClient>();
+            services.AddSingleton<BaseSocketClient>(
                 provider => provider.GetRequiredService<DiscordSocketClient>()
             );
 
-            // Discord handler
-            serviceCollection.AddSingleton<DiscordEventsHandler>();
+            // Discord worker
+            services.AddHostedService<DiscordClientWorker>();
 
             // Github client config
-            serviceCollection.AddSingleton(
+            services.AddSingleton(
                 provider => new GitHubClientCollection(
                     new GitHubClient(new ProductHeaderValue("DiscordGitToolboxApp"))
                 )
             );
-            serviceCollection.AddSingleton<IGitHubClientResolver>(
+            services.AddSingleton<IGitHubClientResolver>(
                 provider => provider.GetRequiredService<GitHubClientCollection>()
             );
 
             // Github mentions config
-            serviceCollection.AddSingleton(provider => new GitHubMentionConfiguration
+            services.AddSingleton(provider => new GitHubMentionConfiguration
             {
                 Repositories = new[]
                 {
@@ -81,18 +63,24 @@ namespace DiscordGitToolbox.App
                     }
                 }
             });
+            services.AddSingleton(
+                provider => provider
+                    .GetRequiredService<IConfiguration>()
+                    .GetSection("Discord")
+                    .Get<DiscordConfiguration>()
+            );
 
             // Mentions pipeline
-            serviceCollection.AddSingleton<IMentionPipeline, MentionPipeline>();
+            services.AddSingleton<IMentionPipeline, MentionPipeline>();
 
             // Mention resolvers
-            serviceCollection.AddSingleton<IMentionResolver, GitHubMentionResolver>();
+            services.AddSingleton<IMentionResolver, GitHubMentionResolver>();
 
             // Mention extractors
-            serviceCollection.AddSingleton<IMentionExtractor, GitHubMentionExtractor>();
+            services.AddSingleton<IMentionExtractor, GitHubMentionExtractor>();
 
             // Automapper
-            serviceCollection.AddAutoMapper(typeof(GitHubMapperProfile));
+            services.AddAutoMapper(typeof(GitHubMapperProfile));
         }
     }
 }

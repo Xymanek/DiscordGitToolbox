@@ -1,12 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordGitToolbox.App", "DiscordGitToolbox.App\DiscordGitToolbox.App.csproj", "{2675044C-526E-4866-90BE-D948B3BD8E8B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordGitToolbox.Core", "DiscordGitToolbox.Core\DiscordGitToolbox.Core.csproj", "{D057906A-1CB5-42AE-9054-45670478AEFE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordGitToolbox.GitHub", "DiscordGitToolbox.GitHub\DiscordGitToolbox.GitHub.csproj", "{AA900BFD-37DE-4E0C-A969-1B4475370BDB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordGitToolbox.GitHub.Tests", "DiscordGitToolbox.GitHub.Tests\DiscordGitToolbox.GitHub.Tests.csproj", "{CEBCA8DF-BB8A-4416-83D9-743F61338D4A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordGitToolbox.App", "DiscordGitToolbox.App\DiscordGitToolbox.App.csproj", "{347C8431-FCF4-4397-A36A-2E7B7215EE0E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,10 +14,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2675044C-526E-4866-90BE-D948B3BD8E8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2675044C-526E-4866-90BE-D948B3BD8E8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2675044C-526E-4866-90BE-D948B3BD8E8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2675044C-526E-4866-90BE-D948B3BD8E8B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D057906A-1CB5-42AE-9054-45670478AEFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D057906A-1CB5-42AE-9054-45670478AEFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D057906A-1CB5-42AE-9054-45670478AEFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -30,5 +26,9 @@ Global
 		{CEBCA8DF-BB8A-4416-83D9-743F61338D4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEBCA8DF-BB8A-4416-83D9-743F61338D4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEBCA8DF-BB8A-4416-83D9-743F61338D4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{347C8431-FCF4-4397-A36A-2E7B7215EE0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{347C8431-FCF4-4397-A36A-2E7B7215EE0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{347C8431-FCF4-4397-A36A-2E7B7215EE0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{347C8431-FCF4-4397-A36A-2E7B7215EE0E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
