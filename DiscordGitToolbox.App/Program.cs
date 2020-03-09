@@ -15,7 +15,7 @@ namespace DiscordGitToolbox.App
 {
     public static class Program
     {
-        private static ILogger _globalLogger;
+        private static ILogger? _globalLogger;
         
         public static void Main(string[] args)
         {
@@ -31,7 +31,7 @@ namespace DiscordGitToolbox.App
         {
             if (e.Observed) return;
             
-            _globalLogger.LogWarning(e.Exception, "UnobservedTaskException");
+            _globalLogger?.LogWarning(e.Exception, "UnobservedTaskException");
         }
 
         private static IHostBuilder CreateHostBuilder(string[] args) =>

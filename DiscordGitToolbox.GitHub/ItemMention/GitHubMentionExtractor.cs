@@ -31,9 +31,10 @@ namespace DiscordGitToolbox.GitHub.ItemMention
 
             MatchCollection matchers = ItemMatcherRegex.Matches(message);
             
-            foreach (Match match in matchers)
+            foreach (Match? match in matchers)
             {
-                GroupCollection groups = match.Groups;
+                GroupCollection? groups = match?.Groups;
+                if (groups?["repo"] == null || groups["number"] == null) continue;
                 
                 if (
                     _aliasMap.Value.TryGetValue(groups["repo"].Value, out GitHubRepositoryReference repoRef) &&
