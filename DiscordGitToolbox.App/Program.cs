@@ -13,17 +13,31 @@ namespace DiscordGitToolbox.App
 {
     public static class Program
     {
-        public static void Main(string[] args)
-        {
+        public static void Main(string[] args) =>
             CreateHostBuilder(args).Build().Run();
-        }
 
         private static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureServices((hostContext, services) => { ConfigureServices(services); });
-        
-        private static void ConfigureServices(IServiceCollection services)
+                .ConfigureServices(ConfigureCoreServices)
+                .ConfigureServices(ConfigureDiscordServices)
+                .ConfigureServices(ConfigureGitHubServices)
+                .ConfigureServices(ConfigureSharedServices);
+
+        private static void ConfigureCoreServices(IServiceCollection services)
         {
+            // Mentions pipeline
+            services.AddSingleton<IMentionPipeline, MentionPipeline>();
+        }
+
+        private static void ConfigureDiscordServices(IServiceCollection services)
+        {
+            services.AddSingleton(
+                provider => provider
+                    .GetRequiredService<IConfiguration>()
+                    .GetSection("Discord")
+                    .Get<DiscordConfiguration>() ?? new DiscordConfiguration() // If we fail (no env/secret set), do not nullref
+            );
+
             // Discord client
             services.AddSingleton<DiscordSocketClient>();
             services.AddSingleton<BaseSocketClient>(
@@ -32,7 +46,10 @@ namespace DiscordGitToolbox.App
 
             // Discord worker
             services.AddHostedService<DiscordClientWorker>();
+        }
 
+        private static void ConfigureGitHubServices(IServiceCollection services)
+        {
             // Github client config
             services.AddSingleton(
                 provider => new GitHubClientCollection(
@@ -64,23 +81,14 @@ namespace DiscordGitToolbox.App
                     }
                 }
             });
-            services.AddSingleton(
-                provider => provider
-                    .GetRequiredService<IConfiguration>()
-                    .GetSection("Discord")
-                    .Get<DiscordConfiguration>()
-            );
 
-            // Mentions pipeline
-            services.AddSingleton<IMentionPipeline, MentionPipeline>();
-
-            // Mention resolvers
             services.AddSingleton<IMentionResolver, GitHubMentionResolver>();
-
-            // Mention extractors
             services.AddSingleton<IMentionExtractor, GitHubMentionExtractor>();
+        }
 
-            // Automapper
+        private static void ConfigureSharedServices(IServiceCollection services)
+        {
+            // AutoMapper
             services.AddAutoMapper(typeof(GitHubMapperProfile));
         }
     }

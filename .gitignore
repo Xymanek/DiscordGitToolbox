@@ -1,3 +1,4 @@
 bin/
 obj/
-/packages/
+packages/
+DiscordGitToolbox.App/out/
