@@ -75,7 +75,10 @@ namespace DiscordGitToolbox.Discord
 
         private async Task RespondWithMentionLinks(SocketMessage message)
         {
-            string[] links = (await _mentionPipeline.GetLinksForMessage(message.Content)).ToArray();
+            SocketGuild guild = ((SocketGuildChannel) message.Channel).Guild;
+            var mentionContext = new MentionResolutionContext(message, guild);
+            
+            string[] links = (await _mentionPipeline.GetLinksForMessage(mentionContext)).ToArray();
             if (links.Length == 0) return;
 
             await message.Channel.SendMessageAsync(string.Join('\n', links));

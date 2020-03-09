@@ -4,6 +4,6 @@ namespace DiscordGitToolbox.Core.ItemMention
 {
     public interface IMentionExtractor
     {
-        IEnumerable<IMention> ExtractMentions(string message);
+        IEnumerable<IMention> ExtractMentions(IMentionResolutionContext mentionContext);
     }
 }

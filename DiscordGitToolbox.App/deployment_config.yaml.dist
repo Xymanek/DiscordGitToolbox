@@ -1,0 +1,12 @@
+github:
+  mentions:
+    guilds:
+      - id: 123
+        repositories:
+          - owner: AwesomeOrg
+            name: AwesomeRepo
+            prefixes:
+              - name: '#'
+              - name: 
+              - name: ar
+              - name: AR

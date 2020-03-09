@@ -16,26 +16,30 @@ namespace DiscordGitToolbox.App
     public static class Program
     {
         private static ILogger? _globalLogger;
-        
+
         public static void Main(string[] args)
         {
             IHost host = CreateHostBuilder(args).Build();
 
             _globalLogger = host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("AppGlobal");
             TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;
-            
+
             host.Run();
         }
 
         private static void OnUnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
         {
             if (e.Observed) return;
-            
+
             _globalLogger?.LogWarning(e.Exception, "UnobservedTaskException");
         }
 
         private static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration(builder =>
+                {
+                    builder.AddYamlFile("deployment_config.yaml", optional: false);
+                })
                 .ConfigureServices(ConfigureCoreServices)
                 .ConfigureServices(ConfigureDiscordServices)
                 .ConfigureServices(ConfigureGitHubServices)
@@ -53,7 +57,8 @@ namespace DiscordGitToolbox.App
                 provider => provider
                     .GetRequiredService<IConfiguration>()
                     .GetSection("Discord")
-                    .Get<DiscordConfiguration>() ?? new DiscordConfiguration() // If we fail (no env/secret set), do not nullref
+                    .Get<DiscordConfiguration>() ?? new DiscordConfiguration()
+                // If we fail (no env/secret set), do not nullref
             );
 
             // Discord client
@@ -79,26 +84,13 @@ namespace DiscordGitToolbox.App
             );
 
             // Github mentions config
-            services.AddSingleton(provider => new GitHubMentionConfiguration
-            {
-                Repositories = new[]
-                {
-                    new GitHubMentionConfiguration.Repository
-                    {
-                        Owner = "WOTCStrategyOverhaul",
-                        Name = "CovertInfiltration",
-
-                        Aliases = new[] {"", "ci", "CI"}
-                    },
-                    new GitHubMentionConfiguration.Repository
-                    {
-                        Owner = "X2CommunityCore",
-                        Name = "X2WOTCCommunityHighlander",
-
-                        Aliases = new[] {"chl", "CHL"}
-                    }
-                }
-            });
+            services.AddSingleton(
+                provider => provider
+                    .GetRequiredService<IConfiguration>()
+                    .GetSection("Github:Mentions")
+                    .Get<GitHubMentionConfiguration>() ?? new GitHubMentionConfiguration()
+                // If we fail, do not nullref
+            );
 
             services.AddSingleton<IMentionResolver, GitHubMentionResolver>();
             services.AddSingleton<IMentionExtractor, GitHubMentionExtractor>();
