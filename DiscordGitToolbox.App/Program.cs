@@ -1,8 +1,10 @@
 using System.Threading.Tasks;
 using AutoMapper;
+using Discord.Commands;
 using Discord.WebSocket;
 using DiscordGitToolbox.Core.ItemMention;
 using DiscordGitToolbox.Discord;
+using DiscordGitToolbox.Discord.Commands;
 using DiscordGitToolbox.Discord.ItemMention;
 using DiscordGitToolbox.GitHub;
 using DiscordGitToolbox.GitHub.ItemMention;
@@ -67,12 +69,14 @@ namespace DiscordGitToolbox.App
             services.AddSingleton<BaseSocketClient>(
                 provider => provider.GetRequiredService<DiscordSocketClient>()
             );
+            services.AddSingleton<CommandService>();
 
             // Discord worker
             services.AddHostedService<DiscordClientWorker>();
             
             // Handlers
             services.AddSingleton<ISocketHandler, MentionsHandler>();
+            services.AddSingleton<ISocketHandler, CommandHandler>();
 
             services.AddSingleton<IMentionsResponder, MentionsResponder>();
         }

@@ -1,5 +1,7 @@
 namespace DiscordGitToolbox.Core.ItemMention
 {
+    // TODO: Switch this to a single  interface with default implementations 
+    
     public interface IReference
     {
     }

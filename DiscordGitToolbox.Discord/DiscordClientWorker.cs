@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
@@ -30,6 +31,8 @@ namespace DiscordGitToolbox.Discord
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            await InitializeHandlers();
+            
             RegisterHandlers();
 
             await _client.LoginAsync(TokenType.Bot, _discordConfiguration.Token);
@@ -46,10 +49,19 @@ namespace DiscordGitToolbox.Discord
             await _client.StopAsync();
         }
 
+        private async Task InitializeHandlers()
+        {
+            await Task.WhenAll(_handlers.Select(handler => handler.InitializeAsyncBatch()));
+
+            foreach (ISocketHandler handler in _handlers)
+            {
+                await handler.InitializeAsync(_client);
+            }
+        }
+
         private void RegisterHandlers()
         {
             _client.Log += Log;
-            _client.MessageReceived += MessageReceived;
 
             foreach (ISocketHandler handler in _handlers)
             {
@@ -61,14 +73,6 @@ namespace DiscordGitToolbox.Discord
         {
             _logger.Log(msg.Severity.ToLogLevel(), msg.Exception, msg.Message);
             return Task.CompletedTask;
-        }
-
-        private async Task MessageReceived(SocketMessage message)
-        {
-            if (message.Content == "!ping")
-            {
-                await message.Channel.SendMessageAsync("Pong!");
-            }
         }
     }
 }
