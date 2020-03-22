@@ -20,13 +20,13 @@ namespace DiscordGitToolbox.GitHub.ItemMention
             _mapper = mapper;
         }
 
-        public IEnumerable<IMention> ExtractMentions(IMentionResolutionContext mentionContext)
+        public IEnumerable<IMention> ExtractMentions(IResolutionContext context)
         {
-            IDictionary<string, GitHubRepositoryReference> prefixMap = MapPrefixesToRepositories(mentionContext);
+            IDictionary<string, GitHubRepositoryReference> prefixMap = MapPrefixesToRepositories(context);
 
             if (prefixMap.Count == 0) yield break;
 
-            MatchCollection matchers = ItemMatcherRegex.Matches(mentionContext.Message.Content);
+            MatchCollection matchers = ItemMatcherRegex.Matches(context.Message.Content);
 
             foreach (Match? match in matchers)
             {
@@ -44,13 +44,13 @@ namespace DiscordGitToolbox.GitHub.ItemMention
         }
 
         private IDictionary<string, GitHubRepositoryReference> MapPrefixesToRepositories
-            (IMentionResolutionContext mentionContext)
+            (IResolutionContext context)
         {
-            ulong channelId = mentionContext.Message.Channel.Id;
+            ulong channelId = context.Message.Channel.Id;
 
             Dictionary<string, GitHubRepositoryReference> result = new Dictionary<string, GitHubRepositoryReference>();
             IEnumerable<GitHubMentionConfiguration.Repository>? reposConfig =
-                _mentionConfiguration.GetRepositoriesForGuild(mentionContext.Guild);
+                _mentionConfiguration.GetRepositoriesForGuild(context.Guild);
 
             if (reposConfig == null) return result;
 

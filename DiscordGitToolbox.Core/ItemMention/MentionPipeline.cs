@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -6,9 +7,9 @@ namespace DiscordGitToolbox.Core.ItemMention
 {
     public interface IMentionPipeline
     {
-        Task<IEnumerable<string>> GetLinksForMessage(IMentionResolutionContext mentionContext);
+        Task<IResponseContext> PrepareResponse(IResolutionContext context);
     }
-    
+
     public class MentionPipeline : IMentionPipeline
     {
         private readonly IEnumerable<IMentionExtractor> _extractors;
@@ -20,14 +21,22 @@ namespace DiscordGitToolbox.Core.ItemMention
             _resolvers = resolvers;
         }
 
-        public async Task<IEnumerable<string>> GetLinksForMessage(IMentionResolutionContext mentionContext)
+        public async Task<IResponseContext> PrepareResponse(IResolutionContext context)
         {
-            string?[] links = await Task.WhenAll(ExtractMentions(mentionContext).Select(ConvertToLinks));
+            IReference?[] references = await Task.WhenAll(ExtractMentions(context).Select(ConvertToReference));
+            IReference[] referencesNotNull = references.Where(r => r != null).ToArray();
 
-            return links.Where(link => link != null);
+            ReadOnlyCollection<string> links = referencesNotNull
+                .OfType<ILinkReference>()
+                .Select(r => r.FriendlyUrl)
+                .Where(s => !string.IsNullOrWhiteSpace(s))
+                .ToList()
+                .AsReadOnly();
+            
+            return new FinalizedResponseContext(context, links);
         }
 
-        private async Task<string?> ConvertToLinks(IMention mention)
+        private async Task<IReference?> ConvertToReference(IMention mention)
         {
             IReference? itemReference = null;
             
@@ -39,12 +48,12 @@ namespace DiscordGitToolbox.Core.ItemMention
                 if (itemReference != null) break;
             }
 
-            return itemReference?.FriendlyUrl;
+            return itemReference;
         }
 
-        private IEnumerable<IMention> ExtractMentions(IMentionResolutionContext mentionContext)
+        private IEnumerable<IMention> ExtractMentions(IResolutionContext context)
         {
-            return _extractors.SelectMany(extractor => extractor.ExtractMentions(mentionContext));
+            return _extractors.SelectMany(extractor => extractor.ExtractMentions(context));
         }
     }
 }

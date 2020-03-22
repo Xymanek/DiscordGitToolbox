@@ -3,6 +3,7 @@ using AutoMapper;
 using Discord.WebSocket;
 using DiscordGitToolbox.Core.ItemMention;
 using DiscordGitToolbox.Discord;
+using DiscordGitToolbox.Discord.ItemMention;
 using DiscordGitToolbox.GitHub;
 using DiscordGitToolbox.GitHub.ItemMention;
 using Microsoft.Extensions.Configuration;
@@ -69,6 +70,11 @@ namespace DiscordGitToolbox.App
 
             // Discord worker
             services.AddHostedService<DiscordClientWorker>();
+            
+            // Handlers
+            services.AddSingleton<ISocketHandler, MentionsHandler>();
+
+            services.AddSingleton<IMentionsResponder, MentionsResponder>();
         }
 
         private static void ConfigureGitHubServices(IServiceCollection services)
