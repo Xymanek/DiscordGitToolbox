@@ -27,7 +27,6 @@ namespace DiscordGitToolbox.Core.ItemMention
             IReference[] referencesNotNull = references.Where(r => r != null).ToArray();
 
             ReadOnlyCollection<string> links = referencesNotNull
-                .OfType<ILinkReference>()
                 .Select(r => r.FriendlyUrl)
                 .Where(s => !string.IsNullOrWhiteSpace(s))
                 .ToList()
