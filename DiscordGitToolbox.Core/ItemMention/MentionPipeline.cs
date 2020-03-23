@@ -37,17 +37,15 @@ namespace DiscordGitToolbox.Core.ItemMention
 
         private async Task<IReference?> ConvertToReference(IMention mention)
         {
-            IReference? itemReference = null;
-            
             foreach (IMentionResolver resolver in _resolvers)
             {
                 if (!resolver.IsMentionSupported(mention)) continue;
                 
-                itemReference = await resolver.ResolveMentionAsync(mention);
-                if (itemReference != null) break;
+                IReference? itemReference = await resolver.ResolveMentionAsync(mention);
+                if (itemReference != null) return itemReference;
             }
 
-            return itemReference;
+            return null;
         }
 
         private IEnumerable<IMention> ExtractMentions(IResolutionContext context)
