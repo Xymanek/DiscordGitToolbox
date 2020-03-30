@@ -5,6 +5,7 @@ WORKDIR /app
 COPY *.sln .
 COPY DiscordGitToolbox.App/*.csproj ./DiscordGitToolbox.App/
 COPY DiscordGitToolbox.Core/*.csproj ./DiscordGitToolbox.Core/
+COPY DiscordGitToolbox.Core.Tests/*.csproj ./DiscordGitToolbox.Core.Tests/
 COPY DiscordGitToolbox.Discord/*.csproj ./DiscordGitToolbox.Discord/
 COPY DiscordGitToolbox.GitHub/*.csproj ./DiscordGitToolbox.GitHub/
 COPY DiscordGitToolbox.GitHub.Tests/*.csproj ./DiscordGitToolbox.GitHub.Tests/
