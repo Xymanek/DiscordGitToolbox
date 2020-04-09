@@ -30,7 +30,7 @@ namespace DiscordGitToolbox.Core.Tests.ItemMention
             Assert.True(resolver.IsMentionSupported(validMention));
             Assert.False(resolver.IsMentionSupported(invalidMention));
 
-            Assert.True(false, "Test breaking github actions"); // Test breaking github actions
+            Assert.True(false, "Test breaking github actions 4"); // Test breaking github actions
         }
 
         private class EmptyMention : IMention
