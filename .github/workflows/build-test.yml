@@ -18,8 +18,8 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --configuration Release --no-restore
-    - name: Upload the project with built assemblies
+      run: dotnet build --no-restore
+    - name: Upload the project + built assemblies
       uses: actions/upload-artifact@v1
       with:
         name: project-with-built-assemblies
@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-    - name: Get the project with built assemblies
+    - name: Get the project + built assemblies
       uses: actions/download-artifact@v1
       with:
         name: project-with-built-assemblies
