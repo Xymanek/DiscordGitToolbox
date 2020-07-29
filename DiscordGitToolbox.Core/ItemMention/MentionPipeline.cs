@@ -24,7 +24,7 @@ namespace DiscordGitToolbox.Core.ItemMention
         public async Task<IResponseContext> PrepareResponse(IResolutionContext context)
         {
             IReference?[] references = await Task.WhenAll(ExtractMentions(context).Select(ConvertToReference));
-            IReference[] referencesNotNull = references.Where(r => r != null).ToArray();
+            IReference[] referencesNotNull = references.Where(r => r != null).ToArray();  
 
             ReadOnlyCollection<string> links = referencesNotNull
                 .Select(r => r.FriendlyUrl)
